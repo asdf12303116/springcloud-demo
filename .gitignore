@@ -1,0 +1,45 @@
+HELP.md
+target/
+**/target/
+**/.mvn
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**
+!**/src/test/**
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+.mvn
+mvnw*
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+
+### VS Code ###
+.vscode/
+
+
+### examples ###
+
+
+### JRebel & XRebel ###
+/src/main/resources/rebel.xml
+/src/main/resources/application-test.yml
+/src/main/resources/application-prod.yml
+/src/main/resources/application-dev.yml
