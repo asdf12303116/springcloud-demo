@@ -2,7 +2,7 @@
 
 name: CI
 
-# Controls when the action will run. 
+# Controls when the action will run.
 on:
   workflow_dispatch:
     inputs:
@@ -27,22 +27,22 @@ jobs:
         with:
           distribution: 'adopt' # See 'Supported distributions' for available options
           java-version: '11'
-          
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-        
+
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
+
       - name: Restore Maven cache
         uses: skjolber/maven-cache-github-action@v1
         with:
           step: restore
-      - name: Build hello-world application with Maven
-        run: mvn -f ./eureka-server/pom.xml compile jib:build
+      - name: Build application with Maven
+        run: mvn -B -Djib.console=plain -f ./eureka-server/pom.xml compile jib:build
       - name: Save Maven cache
         uses: skjolber/maven-cache-github-action@v1
         with:
