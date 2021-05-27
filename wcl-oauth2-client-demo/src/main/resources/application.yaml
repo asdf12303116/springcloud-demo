@@ -1,0 +1,18 @@
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          wcl:
+            authorization-uri: https://www.warcraftlogs.com/oauth/authorize
+            token-uri: https://www.warcraftlogs.com/oauth/token
+        registration:
+          wcl:
+            #client-authentication-method: post
+            client-id: 93307c3f-014e-4aac-9f56-db1f97d9146e
+            client-name: wcl
+            client-secret: JKIf9nHiHhXjdO4g3xZ8O5FBXPZL9tp7kl3aYI9C
+            client-authentication-method: post
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/authorized/wcl"
+            provider: wcl
