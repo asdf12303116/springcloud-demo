@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: user-auth
+  redis:
+    host: 127.0.0.1
+    port: 6379
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1/dailybouns_cloud?useSSL=false&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 1596312345
+server:
+  port: 31000
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:30000/eureka/
+  instance:
+    prefer-ip-address: true
+logging:
+  level:
+    com.wantocode.userauth.mapper: debug
+    
+client:
+  id: testId
+  secret: testSecret
