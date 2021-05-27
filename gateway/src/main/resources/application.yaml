@@ -1,0 +1,44 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # 获取JWT验签公钥请求路径
+          jwk-set-uri: 'http://localhost:31000/getPublicKey'
+  redis:
+    database: 0
+    host: localhost
+    port: 6379
+    password:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true # 启用服务发现
+          lower-case-service-id: true
+      routes:
+        - id: demo-user
+          uri: lb://user-auth
+          predicates:
+            - Path=/usertest/**
+          filters:
+            - StripPrefix=1
+  application:
+    name: gateway  
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:30000/eureka/
+  instance:
+    prefer-ip-address: true
+
+# 配置白名单路径
+white-list:
+  urls:
+    - "/demo-auth/oauth/token"
+server:
+  port: 32000
+  
+#logging:
+#  level:
+#    org.springframework.cloud.gateway: debug
