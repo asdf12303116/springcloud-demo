@@ -9,6 +9,7 @@ import com.chen.userauth.mapper.AuthUserMapper;
 import com.chen.userauth.service.UserAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author chen
@@ -34,13 +34,9 @@ public class UserAuthServiceImpl extends ServiceImpl<AuthUserMapper, BaseAuthUse
 
 
     @Override
+    @Cacheable(value = "baseAuthuser")
     public BaseAuthUser getUserByUsername(String username) {
-        BaseAuthUser authUserT = redisService.get("test");
-        if (Objects.nonNull(authUserT)) {
-            return authUserT;
-        }
         BaseAuthUser authUser = lambdaQuery().eq(BaseAuthUser::getUsername, username).one();
-        redisService.put("test", authUser);
         return authUser;
 
     }
@@ -75,7 +71,8 @@ public class UserAuthServiceImpl extends ServiceImpl<AuthUserMapper, BaseAuthUse
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         AuthUser authUser = new AuthUser();
-        BaseAuthUser baseAuthUser = getUserByUsername(username);
+        BaseAuthUser baseAuthUser = redisService.exists("baseAuthuser", username) ? redisService.get(username) :
+                getUserByUsername(username);
         BeanUtils.copyProperties(baseAuthUser, authUser);
         return authUser;
     }
