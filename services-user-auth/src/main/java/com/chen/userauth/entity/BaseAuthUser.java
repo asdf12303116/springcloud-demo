@@ -1,6 +1,7 @@
 package com.chen.userauth.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.chen.common.base.BaseEntity;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
+@TableName("user")
 public  class BaseAuthUser extends BaseEntity {
     @TableField("user_name")
     private String username;

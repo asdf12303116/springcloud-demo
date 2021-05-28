@@ -1,4 +1,4 @@
-package com.chen.userauth.config;
+package com.chen.common.config;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -20,10 +20,6 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-
-/**
- * @author chen
- */
 @Configuration
 public class RedisConfig {
     @Bean
@@ -56,6 +52,7 @@ public class RedisConfig {
         return new GenericJackson2JsonRedisSerializer(objectMapper);
 
     }
+
 
     @Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {

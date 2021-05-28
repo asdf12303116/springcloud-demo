@@ -1,6 +1,7 @@
 package com.chen.userauth.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.chen.common.service.RedisService;
 import com.chen.userauth.entity.AuthUser;
 import com.chen.userauth.entity.BaseAuthUser;
 import com.chen.userauth.entity.dto.UserDto;
@@ -8,6 +9,7 @@ import com.chen.userauth.mapper.AuthUserMapper;
 import com.chen.userauth.service.UserAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -22,19 +24,25 @@ import java.util.List;
  */
 @Service
 @Slf4j
-public class UserAuthServiceImpl extends ServiceImpl<AuthUserMapper, AuthUser> implements UserAuthService, UserDetailsService {
+public class UserAuthServiceImpl extends ServiceImpl<AuthUserMapper, BaseAuthUser> implements UserAuthService,
+        UserDetailsService {
 
     @Resource
     private PasswordEncoder passwordEncoder;
+    @Resource
+    private RedisService redisService;
+
 
     @Override
-    public AuthUser getUserByUsername(String username) {
-        return lambdaQuery().eq(AuthUser::getUsername,username).one();
+    @Cacheable(value = "baseAuthuser")
+    public BaseAuthUser getUserByUsername(String username) {
+        BaseAuthUser authUser = lambdaQuery().eq(BaseAuthUser::getUsername, username).one();
+        return authUser;
 
     }
 
     @Override
-    public List<AuthUser> getAllUser() {
+    public List<BaseAuthUser> getAllUser() {
         return lambdaQuery().list();
     }
 
@@ -62,6 +70,10 @@ public class UserAuthServiceImpl extends ServiceImpl<AuthUserMapper, AuthUser> i
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return getUserByUsername(username);
+        AuthUser authUser = new AuthUser();
+        BaseAuthUser baseAuthUser = redisService.exists("baseAuthuser", username) ? redisService.get(username) :
+                getUserByUsername(username);
+        BeanUtils.copyProperties(baseAuthUser, authUser);
+        return authUser;
     }
 }
