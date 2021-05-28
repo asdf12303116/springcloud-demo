@@ -1,7 +1,9 @@
 package com.chen.userauth.service;
 
 import cn.hutool.core.date.DateField;
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.crypto.SecureUtil;
 import com.chen.common.service.RedisService;
 import com.chen.userauth.entity.AuthUser;
@@ -18,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.ParseException;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -64,6 +65,7 @@ public class JwtService {
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject("default")
                 .issueTime(DateUtil.date())
+                .jwtID(UUID.fastUUID().toString())
                 .expirationTime(DateUtil.date().offset(DateField.SECOND, expiration))
                 .claim("username", user.getUsername())
                 .claim("userId", user.getId().toString())
@@ -80,13 +82,16 @@ public class JwtService {
         return jwsObject.verify(jwsVerifier);
     }
 
+    public JWTClaimsSet getTokenInfo(String token) throws ParseException {
+        JWSObject jwsObject = JWSObject.parse(token);
+        return JWTClaimsSet.parse(jwsObject.getParsedString());
+    }
+
     public String[] getUserInfo(String tokenStr) throws ParseException {
-        JWSObject jwsObject = JWSObject.parse(tokenStr);
-        Payload payload = jwsObject.getPayload();
-        Map<String, Object> jsonMap = payload.toJSONObject();
-        String username = (String) jsonMap.get("username");
-        String userId = (String) jsonMap.get("userId");
-        String userType = (String) jsonMap.get("userType");
+        JWTClaimsSet jwtClaimsSet = getTokenInfo(tokenStr);
+        String username = jwtClaimsSet.getStringClaim("username");
+        String userId = jwtClaimsSet.getStringClaim("userId");
+        String userType = jwtClaimsSet.getStringClaim("userType");
         return new String[]{username, userId, userType, tokenStr};
     }
 
@@ -99,6 +104,32 @@ public class JwtService {
 
 
         return generateToken(authUser);
+    }
+
+    public void logout(String token) throws ParseException {
+        JWTClaimsSet jwtClaimsSet = getTokenInfo(token);
+        redisService.put("BLACK_LIST", jwtClaimsSet.getJWTID(), true);
+    }
+
+    public Boolean verifyToken(String token) {
+        try {
+            JWSObject jwsObject = JWSObject.parse(token);
+            JWTClaimsSet claimsSet = JWTClaimsSet.parse(jwsObject.getParsedString());
+            boolean status = redisService.exists("BLACK_LIST", claimsSet.getJWTID());
+            if (status) {
+                status = jwsObject.verify(jwsVerifier);
+            }
+            if (status) {
+                DateTime issueTime = DateTime.of(claimsSet.getIssueTime());
+                DateTime expirationTime = DateTime.of(claimsSet.getExpirationTime());
+                status = issueTime.after(expirationTime);
+            }
+            return status;
+        } catch (ParseException | JOSEException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 
 }
