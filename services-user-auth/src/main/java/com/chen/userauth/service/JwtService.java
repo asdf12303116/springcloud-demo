@@ -3,6 +3,7 @@ package com.chen.userauth.service;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.crypto.SecureUtil;
+import com.chen.common.service.RedisService;
 import com.chen.userauth.entity.AuthUser;
 import com.chen.userauth.entity.dto.LoginUserDto;
 import com.nimbusds.jose.*;
@@ -33,6 +34,9 @@ public class JwtService {
 
     @Resource
     private AuthenticationManager authenticationManager;
+
+    @Resource
+    private RedisService redisService;
 
     private volatile JWSSigner jwsSigner;
     private volatile JWSVerifier jwsVerifier;

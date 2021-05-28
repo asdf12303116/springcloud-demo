@@ -1,6 +1,6 @@
 package com.chen.userauth.controller;
 
-import com.chen.userauth.entity.AuthUser;
+import com.chen.userauth.entity.BaseAuthUser;
 import com.chen.userauth.entity.dto.UserDto;
 import com.chen.userauth.service.JwtService;
 import com.chen.userauth.service.UserAuthService;
@@ -27,13 +27,13 @@ public class TestController {
     private HttpServletRequest request;
 
     @GetMapping("/user")
-    public List<AuthUser> getAllUser() {
+    public List<BaseAuthUser> getAllUser() {
         return userAuthService.getAllUser();
     }
 
     @GetMapping("/user/{username}")
-    public ResponseEntity<AuthUser> getUser(@PathVariable("username") String username) {
-        Optional<AuthUser> authUser = Optional.ofNullable(userAuthService.getUserByUsername(username));
+    public ResponseEntity<BaseAuthUser> getUser(@PathVariable("username") String username) {
+        Optional<BaseAuthUser> authUser = Optional.ofNullable(userAuthService.getUserByUsername(username));
         return ResponseEntity.of(authUser);
     }
 

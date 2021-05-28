@@ -3,6 +3,7 @@ package com.chen.userauth.filter;
 import cn.hutool.json.JSONUtil;
 import com.chen.common.base.BaseResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,7 +23,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             filterChain.doFilter(request, response);
-        } catch (Exception e) {
+        } catch (AuthenticationException e) {
             Map<String, Object> map = new HashMap<>();
             map.put("message", e.getLocalizedMessage());
             BaseResponse<Map<String, Object>> returnEntity = new BaseResponse(HttpStatus.UNAUTHORIZED.value(), "异常",

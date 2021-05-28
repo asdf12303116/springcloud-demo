@@ -1,6 +1,5 @@
 package com.chen.userauth.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,7 +16,6 @@ import java.util.Set;
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
-@TableName("user")
 public class AuthUser  extends BaseAuthUser implements UserDetails {
 
 
