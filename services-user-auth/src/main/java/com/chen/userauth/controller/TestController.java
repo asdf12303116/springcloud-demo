@@ -22,7 +22,8 @@ public class TestController {
     @Resource
     private UserAuthService userAuthService;
     @Resource
-    private KeyPair keyPair;
+    private JwtService jwtService;
+
 
     @Resource
     private HttpServletRequest request;
@@ -43,21 +44,4 @@ public class TestController {
         userAuthService.createUser(user);
     }
 
-    @GetMapping("getPublicKey")
-    public Map<String, Object> getPublicKey() {
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-        RSAKey key = new RSAKey.Builder(publicKey).build();
-        return new JWKSet(key).toJSONObject();
-    }
-
-    private Map<String, String> getHeadersInfo() {
-        Map<String, String> map = new HashMap<String, String>();
-        Enumeration headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String key = (String) headerNames.nextElement();
-            String value = request.getHeader(key);
-            map.put(key, value);
-        }
-        return map;
-    }
 }
