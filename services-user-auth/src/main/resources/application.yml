@@ -20,7 +20,6 @@ eureka:
 logging:
   level:
     com.wantocode.userauth.mapper: debug
-    
-client:
-  id: testId
-  secret: testSecret
+jwt:
+  secret: asdf12303116
+  expiration: 1800
