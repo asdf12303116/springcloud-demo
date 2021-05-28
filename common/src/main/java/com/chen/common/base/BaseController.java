@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class BaseController {
 
-    private <T> ResponseEntity<BaseResponse<T>> buildResponse(HttpStatus httpStatus, Integer customCode, String message, T data){
-        BaseResponse<T> baseResponse=new BaseResponse<>(customCode,message,data);
-        return new ResponseEntity<>( baseResponse,httpStatus);
+    protected <T> ResponseEntity<BaseResponse<T>> buildResponse(HttpStatus httpStatus, Integer customCode, String message, T data) {
+        BaseResponse<T> baseResponse = new BaseResponse<>(customCode, message, data);
+        return new ResponseEntity<>(baseResponse, httpStatus);
     }
 }
