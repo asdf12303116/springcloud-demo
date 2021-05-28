@@ -9,7 +9,7 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 /**
  * @author chen
  */
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = {"com.chen.userauth", "com.chen.common"})
 @EnableDiscoveryClient
 @EnableCaching
 @MapperScan("com.chen.userauth.mapper")
