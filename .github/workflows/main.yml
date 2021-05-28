@@ -42,7 +42,7 @@ jobs:
         with:
           step: restore
       - name: Build application with Maven
-        run: mvn -B -Djib.console=plain -pl ${{ name }} -am  compile jib:build
+        run: mvn -B -Djib.console=plain -pl ${{ github.event.inputs.name }} -am  compile jib:build
       - name: Save Maven cache
         uses: skjolber/maven-cache-github-action@v1
         with:
