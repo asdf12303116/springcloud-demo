@@ -94,5 +94,22 @@ public interface RedisService {
      */
     Set<String> keys(String namespace);
 
+    /**
+     * 缓存中是否有对应的value
+     *
+     * @param key keyID
+     * @return 是否
+     */
+    boolean exists(String key);
+
+    /**
+     * 命名空间中是否有对应的value
+     *
+     * @param namespace 命名空间
+     * @param key       keyID
+     * @return 是否
+     */
+    boolean exists(String namespace, String key);
+
 
 }

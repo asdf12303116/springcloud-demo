@@ -106,4 +106,20 @@ public class RedisServiceImpl implements RedisService {
         //无值返回[]非null
         return redisTemplate.keys(namespace + ":*");
     }
+
+    @Override
+    public boolean exists(String key) {
+        return redisTemplate.hasKey(key);
+    }
+
+    @Override
+    public boolean exists(String namespace, String key) {
+        String targetKey = "";
+        if (StrUtil.isNotEmpty(namespace)) {
+            targetKey = namespace + ":" + key;
+            return exists(targetKey);
+
+        }
+        return false;
+    }
 }
