@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: eureka-server
+server:
+  port: 30000
+eureka:
+  instance:
+    hostname: ${POD_NAME}.${SERVICE_NAME}
+    non-secure-port: 80
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_ADDRESS}
